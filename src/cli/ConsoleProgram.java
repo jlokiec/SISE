@@ -5,6 +5,8 @@ import engine.ManhattanPuzzleSolver;
 import engine.PuzzleSolver;
 import engine.State;
 import input.InitialStateReader;
+import result.ExtraInformation;
+import result.ExtraInformationSaver;
 import result.SolutionInformation;
 import result.SolutionInformationSaver;
 
@@ -56,6 +58,7 @@ public class ConsoleProgram {
             puzzleSolver.solve();
 
             saveSolutionInformation(outputSolutionFile, puzzleSolver.getSolutionInformation());
+            saveExtraInformation(outputExtraFile, puzzleSolver.getExtraInformation());
         } else {
             System.out.println("Passed incorrect number of arguments");
         }
@@ -69,6 +72,11 @@ public class ConsoleProgram {
 
     private static void saveSolutionInformation(String fileName, SolutionInformation solutionInformation) {
         SolutionInformationSaver saver = new SolutionInformationSaver(fileName, solutionInformation);
+        saver.save();
+    }
+
+    private static void saveExtraInformation(String fileName, ExtraInformation extraInformation) {
+        ExtraInformationSaver saver = new ExtraInformationSaver(fileName, extraInformation);
         saver.save();
     }
 }

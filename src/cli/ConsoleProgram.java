@@ -5,6 +5,8 @@ import engine.ManhattanPuzzleSolver;
 import engine.PuzzleSolver;
 import engine.State;
 import input.InitialStateReader;
+import result.SolutionInformation;
+import result.SolutionInformationSaver;
 
 public class ConsoleProgram {
     private static final String BFS_STRATEGY = "bfs";
@@ -52,6 +54,8 @@ public class ConsoleProgram {
             }
 
             puzzleSolver.solve();
+
+            saveSolutionInformation(outputSolutionFile, puzzleSolver.getSolutionInformation());
         } else {
             System.out.println("Passed incorrect number of arguments");
         }
@@ -61,5 +65,10 @@ public class ConsoleProgram {
         InitialStateReader initialStateReader = new InitialStateReader(fileName);
         initialStateReader.read();
         return initialStateReader.getInitialState();
+    }
+
+    private static void saveSolutionInformation(String fileName, SolutionInformation solutionInformation) {
+        SolutionInformationSaver saver = new SolutionInformationSaver(fileName, solutionInformation);
+        saver.save();
     }
 }

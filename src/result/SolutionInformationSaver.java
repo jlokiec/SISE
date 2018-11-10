@@ -13,6 +13,7 @@ public class SolutionInformationSaver implements FileSaver {
         this.solutionInformation = solutionInformation;
     }
 
+    @Override
     public void save() {
         try (PrintWriter printWriter = new PrintWriter(new FileWriter(fileName))) {
             printWriter.println(solutionInformation.getSolutionLength());

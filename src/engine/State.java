@@ -4,6 +4,7 @@ public class State {
     private byte sizeX;
     private byte sizeY;
     private byte[] stateArray;
+    private byte zeroIndex;
 
     public byte getSizeX() {
         return sizeX;
@@ -27,6 +28,23 @@ public class State {
 
     public void setStateArray(byte[] stateArray) {
         this.stateArray = stateArray;
+    }
+
+    public void findZeroIndex() {
+        for (byte i = 0; i < sizeX * sizeY; i++) {
+            if (stateArray[i] == 0) {
+                zeroIndex = i;
+                return;
+            }
+        }
+    }
+
+    public byte getZeroX() {
+        return (byte) (zeroIndex % sizeX);
+    }
+
+    public byte getZeroY() {
+        return (byte) ((zeroIndex - getZeroX()) / sizeX);
     }
 
     @Override

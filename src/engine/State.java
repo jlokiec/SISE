@@ -1,5 +1,8 @@
 package engine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class State {
     private byte sizeX;
     private byte sizeY;
@@ -45,6 +48,28 @@ public class State {
 
     public byte getZeroY() {
         return (byte) ((zeroIndex - getZeroX()) / sizeX);
+    }
+
+    public List<MoveDirection> getAvailableMoves() {
+        List<MoveDirection> availableMoves = new ArrayList<>();
+
+        // update zero index value before checking available move directions
+        findZeroIndex();
+
+        if (getZeroY() > 0) {
+            availableMoves.add(MoveDirection.UP);
+        }
+        if (getZeroY() < sizeY - 1) {
+            availableMoves.add(MoveDirection.DOWN);
+        }
+        if (getZeroX() > 0) {
+            availableMoves.add(MoveDirection.LEFT);
+        }
+        if (getZeroX() < sizeX - 1) {
+            availableMoves.add(MoveDirection.RIGHT);
+        }
+
+        return availableMoves;
     }
 
     @Override

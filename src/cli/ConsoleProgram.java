@@ -3,6 +3,8 @@ package cli;
 import engine.HammingPuzzleSolver;
 import engine.ManhattanPuzzleSolver;
 import engine.PuzzleSolver;
+import engine.State;
+import input.InitialStateReader;
 
 public class ConsoleProgram {
     private static final String BFS_STRATEGY = "bfs";
@@ -19,6 +21,8 @@ public class ConsoleProgram {
             String inputFile = args[2];
             String outputSolutionFile = args[3];
             String outputExtraFile = args[4];
+
+            State initialState = readInitialStateFromFile(inputFile);
 
             PuzzleSolver puzzleSolver = null;
 
@@ -51,5 +55,11 @@ public class ConsoleProgram {
         } else {
             System.out.println("Passed incorrect number of arguments");
         }
+    }
+
+    private static State readInitialStateFromFile(String fileName) {
+        InitialStateReader initialStateReader = new InitialStateReader(fileName);
+        initialStateReader.read();
+        return initialStateReader.getInitialState();
     }
 }

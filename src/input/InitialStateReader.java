@@ -35,10 +35,7 @@ public class InitialStateReader implements StateReader {
                 }
             }
 
-            initialState = new State();
-            initialState.setSizeX(sizeX);
-            initialState.setSizeY(sizeY);
-            initialState.setStateArray(initialValues);
+            initialState = new State(sizeX, sizeY, initialValues);
         } catch (FileNotFoundException e) {
             System.out.println("Unable to read initial state, file not found");
         } catch (IOException e) {

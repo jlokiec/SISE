@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class ExtraInformationSaver implements FileSaver {
+public class ExtraInformationSaver implements InformationSaver {
     private String fileName;
     private ExtraInformation extraInformation;
 

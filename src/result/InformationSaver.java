@@ -1,5 +1,5 @@
 package result;
 
-public interface FileSaver {
+public interface InformationSaver {
     void save();
 }

@@ -47,6 +47,11 @@ public class State {
         this.stateArray = stateArray;
     }
 
+    public byte getZeroIndex() {
+        findZeroIndex();
+        return zeroIndex;
+    }
+
     public void findZeroIndex() {
         for (byte i = 0; i < sizeX * sizeY; i++) {
             if (stateArray[i] == 0) {

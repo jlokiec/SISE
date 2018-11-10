@@ -1,5 +1,9 @@
 package cli;
 
+import engine.HammingPuzzleSolver;
+import engine.ManhattanPuzzleSolver;
+import engine.PuzzleSolver;
+
 public class ConsoleProgram {
     private static final String BFS_STRATEGY = "bfs";
     private static final String DFS_STRATEGY = "dfs";
@@ -16,7 +20,34 @@ public class ConsoleProgram {
             String outputSolutionFile = args[3];
             String outputExtraFile = args[4];
 
+            PuzzleSolver puzzleSolver = null;
+
             // TODO: implement running selected strategy
+            switch (selectedStrategy) {
+                case BFS_STRATEGY:
+                    // TODO: implement running BFS
+                    break;
+                case DFS_STRATEGY:
+                    // TODO: implement running DFS
+                    break;
+                case A_STAR_STRATEGY:
+                    if (selectedStrategyExtra.equals(HAMMING_HEURISTIC)) {
+                        puzzleSolver = new HammingPuzzleSolver();
+                    }
+                    if (selectedStrategyExtra.equals(MANHATTAN_HEURISTIC)) {
+                        puzzleSolver = new ManhattanPuzzleSolver();
+                    }
+                    break;
+                default:
+                    System.out.println("Selected invalid strategy");
+            }
+
+            if (puzzleSolver == null) {
+                System.out.println("puzzleSolver is null");
+                return;
+            }
+
+            puzzleSolver.solve();
         } else {
             System.out.println("Passed incorrect number of arguments");
         }

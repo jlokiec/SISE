@@ -1,7 +1,9 @@
 package engine;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class State {
     private byte sizeX;
@@ -70,6 +72,19 @@ public class State {
         }
 
         return availableMoves;
+    }
+
+    Queue<State> getNeighbors() {
+        LinkedList<State> neighbors = new LinkedList<>();
+        List<MoveDirection> possibleDirections = getAvailableMoves();
+
+        for (MoveDirection direction : possibleDirections) {
+            State neighbor = new State();
+            neighbor.setStateArray(this.getStateArray());
+            //neighbor.move(direction);
+            neighbors.add(neighbor);
+        }
+        return neighbors;
     }
 
     @Override

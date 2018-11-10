@@ -1,5 +1,8 @@
 package engine;
 
+import result.ExtraInformation;
+import result.SolutionInformation;
+
 import java.util.*;
 
 public class BreadthFirstSearchSolver implements PuzzleSolver {
@@ -17,17 +20,17 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
     /**
      * Lista stanów otwartych czyli takich, które nie są jeszcze w pełni przeszukane
      */
-    protected Queue<State> ListOfOpenStates;
+    protected LinkedList<State> listOfOpenStates;
 
     /**
      * Lista stanów zamkniętych czyli takich, które są już w całości przeszukane
      */
-    protected Set<State> ListOfClosedStates;
+    protected Set<State> listOfClosedStates;
 
     /**
      * Ciąg operatorów, które od stanu początkowego przejdą do stanu docelowego
      */
-    protected LinkedList<MoveDirection> Directions;
+    protected LinkedList<MoveDirection> directions;
 
     public State getGoalState() {
         return goalState;
@@ -45,49 +48,66 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
         this.actualState = actualState;
     }
 
-    public Queue<State> getListOfOpenStates() {
-        return ListOfOpenStates;
+    public LinkedList<State> getListOfOpenStates() {
+        return listOfOpenStates;
     }
 
-    public void setListOfOpenStates(Queue<State> listOfOpenStates) {
-        ListOfOpenStates = listOfOpenStates;
+    public void setListOfOpenStates(LinkedList<State> listOfOpenStates) {
+        this.listOfOpenStates = listOfOpenStates;
     }
 
     public LinkedList<MoveDirection> getDirections() {
-        return Directions;
+        return directions;
     }
 
     public void setDirections(LinkedList<MoveDirection> directions) {
-        Directions = directions;
+        this.directions = directions;
     }
 
     public Set<State> getListOfClosedStates() {
-        return ListOfClosedStates;
+        return listOfClosedStates;
     }
 
     public void setListOfClosedStates(Set<State> listOfClosedStates) {
-        ListOfClosedStates = listOfClosedStates;
+        this.listOfClosedStates = listOfClosedStates;
     }
+
     public BreadthFirstSearchSolver(State initialState, State goalState) {
         setGoalState(goalState);
         setListOfOpenStates(new LinkedList<>());
         setListOfClosedStates(new LinkedHashSet<>());
         setDirections(new LinkedList<>());
-        getListOfOpenStates().add(initialState);
+        getListOfOpenStates().addFirst(initialState);
     }
 
-    private boolean isSolved(State actualState) {
-        return (goalState == actualState ? true : false);
+    private boolean isSolved(State state) {
+        return (getGoalState() == state ? true : false);
     }
 
     @Override
     public void solve() {
-        while(!ListOfOpenStates.isEmpty()) {
-            actualState = ListOfOpenStates.peek();
-            ListOfClosedStates.add(actualState);
+        while(!listOfOpenStates.isEmpty()) {
+            setActualState(listOfOpenStates.poll());
+            listOfClosedStates.add(actualState);
 
-            if(isSolved(actualState))
+            if(isSolved(getActualState()))
                 return; // Success
             }
+
+            for (State neighbor : actualState.getNeighbors()) {
+                if(!(getListOfOpenStates().contains(neighbor) || getListOfClosedStates().contains(neighbor))) {
+                    getListOfOpenStates().addFirst(neighbor);
+                }
+            }
         }
+
+    @Override
+    public ExtraInformation getExtraInformation() {
+        return null;
     }
+
+    @Override
+    public SolutionInformation getSolutionInformation() {
+        return null;
+    }
+}

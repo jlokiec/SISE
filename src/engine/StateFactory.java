@@ -12,15 +12,12 @@ public class StateFactory {
     }
 
     public State getSolvedState() {
-        State solvedState = new State(sizeX, sizeY);
-
         byte[] solvedStateArray = new byte[sizeX * sizeY];
         for (byte i = 0; i < solvedStateArray.length - 1; i++) {
             solvedStateArray[i] = (byte) (i + 1);
         }
-        solvedState.setStateArray(solvedStateArray);
 
-        return solvedState;
+        return new State(sizeX, sizeY, solvedStateArray, null, MoveDirection.NO_MOVE, 0);
     }
 
     public State getStateAfterMove(State currentState, MoveDirection moveDirection) {
@@ -44,7 +41,7 @@ public class StateFactory {
 
         byte[] swappedStateArray = swap(currentState.getStateArray(), zeroIndex, indexToSwap);
 
-        return new State(currentState.getSizeX(), currentState.getSizeY(), swappedStateArray);
+        return new State(sizeX, sizeY, swappedStateArray, currentState, moveDirection, currentState.getDepthLevel() + 1);
     }
 
     private byte[] swap(byte[] array, byte index1, byte index2) {

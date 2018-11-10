@@ -40,7 +40,7 @@ public class ConsoleProgram {
                     break;
                 case A_STAR_STRATEGY:
                     if (selectedStrategyExtra.equals(HAMMING_HEURISTIC)) {
-                        puzzleSolver = new HammingPuzzleSolver();
+                        puzzleSolver = new HammingPuzzleSolver(initialState);
                     }
                     if (selectedStrategyExtra.equals(MANHATTAN_HEURISTIC)) {
                         puzzleSolver = new ManhattanPuzzleSolver();

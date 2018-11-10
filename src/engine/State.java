@@ -9,6 +9,20 @@ public class State {
     private byte[] stateArray;
     private byte zeroIndex;
 
+    public State() {
+    }
+
+    public State(byte sizeX, byte sizeY) {
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+    }
+
+    public State(byte sizeX, byte sizeY, byte[] stateArray) {
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        this.stateArray = stateArray;
+    }
+
     public byte getSizeX() {
         return sizeX;
     }

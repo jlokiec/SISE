@@ -13,10 +13,6 @@ public class StateWithPriority implements Comparable<StateWithPriority> {
         return state;
     }
 
-    public int getPriority() {
-        return priority;
-    }
-
     @Override
     public int compareTo(StateWithPriority o) {
         return Integer.compare(priority, o.priority);

@@ -13,6 +13,7 @@ public class ExtraInformationSaver implements FileSaver {
         this.extraInformation = extraInformation;
     }
 
+    @Override
     public void save() {
         try (PrintWriter printWriter = new PrintWriter(new FileWriter(fileName))) {
             printWriter.println(extraInformation.getSolutionLength());

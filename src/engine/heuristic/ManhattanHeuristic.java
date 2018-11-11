@@ -10,7 +10,7 @@ public class ManhattanHeuristic implements Heuristic {
         int distance = processedState.getDepthLevel();
 
         for (int i = 0; i < stateArray.length; i++) {
-            if (stateArray[i] == 0) {
+            if (stateArray[i] == State.ZERO_PUZZLE) {
                 continue;
             }
 

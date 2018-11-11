@@ -9,16 +9,8 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 public class AStarPuzzleSolver implements PuzzleSolver {
-    // extra information
-    private long startTimestamp;
-    private long endTimestamp;
-    private int visitedStates;
-    private int processedStates;
-    private int maxDepth;
-
-    // solution information
-    private String solutionPath;
-    private int solutionLength;
+    private ExtraInformation extraInformation;
+    private SolutionInformation solutionInformation;
 
     private State currentState;
     private State solvedState;
@@ -27,16 +19,13 @@ public class AStarPuzzleSolver implements PuzzleSolver {
 
     public AStarPuzzleSolver(State initialState, Heuristic heuristic) {
         currentState = initialState;
-
         this.heuristic = heuristic;
+
         stateFactory = new StateFactory(initialState.getSizeX(), initialState.getSizeY());
         solvedState = stateFactory.getSolvedState();
 
-        solutionPath = "";
-        solutionLength = 0;
-        visitedStates = 0;
-        processedStates = 0;
-        maxDepth = 0;
+        extraInformation = new ExtraInformation();
+        solutionInformation = new SolutionInformation();
     }
 
     private boolean isSolved() {
@@ -45,16 +34,32 @@ public class AStarPuzzleSolver implements PuzzleSolver {
 
     @Override
     public void solve() {
-        startTimestamp = System.nanoTime();
+        int visitedStates = 0;
+        long startTimestamp = System.nanoTime();
 
         PriorityQueue<StateWithPriority> priorityQueue = new PriorityQueue<>();
         priorityQueue.add(new StateWithPriority(currentState, 0));
 
-        while (!isSolved()) {
+        while (priorityQueue.size() > 0) {
             currentState = priorityQueue.poll().getState();
 
-            if (currentState.getDepthLevel() > maxDepth) {
-                maxDepth = currentState.getDepthLevel();
+            visitedStates++;
+
+            if (isSolved()) {
+                long endTimestamp = System.nanoTime();
+
+                solutionInformation.setSolutionLength(currentState.getDepthLevel());
+                solutionInformation.setSolutionMoves(currentState.getPath());
+
+                extraInformation.setVisitedStates(visitedStates);
+                extraInformation.setProcessedStates(visitedStates + priorityQueue.size());
+                extraInformation.setMaxRecursionDepth(currentState.getDepthLevel());
+                extraInformation.setSolutionLength(currentState.getDepthLevel());
+
+                double computationTime = (endTimestamp - startTimestamp) / 100000.0;
+                extraInformation.setComputationTime(computationTime);
+
+                return;
             }
 
             List<MoveDirection> availableMoves = currentState.getAvailableMoves();
@@ -64,21 +69,15 @@ public class AStarPuzzleSolver implements PuzzleSolver {
                 priorityQueue.add(new StateWithPriority(stateAfterMove, heuristic.getValue(stateAfterMove, solvedState)));
             }
         }
-
-        endTimestamp = System.nanoTime();
-
-        solutionPath = currentState.getPath();
-        solutionLength = solutionPath.length();
     }
 
     @Override
     public ExtraInformation getExtraInformation() {
-        double computationTime = (endTimestamp - startTimestamp) / 1000.0;
-        return new ExtraInformation(solutionLength, visitedStates, processedStates, maxDepth, computationTime);
+        return extraInformation;
     }
 
     @Override
     public SolutionInformation getSolutionInformation() {
-        return new SolutionInformation(solutionLength, solutionPath);
+        return solutionInformation;
     }
 }

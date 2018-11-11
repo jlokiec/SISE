@@ -1,5 +1,6 @@
 package input;
 
+import engine.MoveDirection;
 import engine.State;
 
 import java.io.BufferedReader;
@@ -35,10 +36,7 @@ public class InitialStateReader implements StateReader {
                 }
             }
 
-            initialState = new State();
-            initialState.setSizeX(sizeX);
-            initialState.setSizeY(sizeY);
-            initialState.setStateArray(initialValues);
+            initialState = new State(sizeX, sizeY, initialValues, null, MoveDirection.NO_MOVE, 0);
         } catch (FileNotFoundException e) {
             System.out.println("Unable to read initial state, file not found");
         } catch (IOException e) {

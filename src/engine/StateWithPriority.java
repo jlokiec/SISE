@@ -1,6 +1,6 @@
 package engine;
 
-public class StateWithPriority {
+public class StateWithPriority implements Comparable<StateWithPriority> {
     private State state;
     private int priority;
 
@@ -13,7 +13,8 @@ public class StateWithPriority {
         return state;
     }
 
-    public int getPriority() {
-        return priority;
+    @Override
+    public int compareTo(StateWithPriority o) {
+        return Integer.compare(priority, o.priority);
     }
 }

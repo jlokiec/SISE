@@ -6,68 +6,83 @@ import java.util.List;
 import java.util.Queue;
 
 public class State {
+    public static final byte ZERO_PUZZLE = 0;
+
     private byte sizeX;
     private byte sizeY;
     private byte[] stateArray;
-    private byte zeroIndex;
+    private State parentState;
+    private MoveDirection previousMove;
+    private int depthLevel;
+
+    public State(byte sizeX, byte sizeY, byte[] stateArray, State parentState, MoveDirection previousMove, int depthLevel) {
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        this.stateArray = stateArray;
+        this.parentState = parentState;
+        this.previousMove = previousMove;
+        this.depthLevel = depthLevel;
+    }
 
     public byte getSizeX() {
         return sizeX;
-    }
-
-    public void setSizeX(byte sizeX) {
-        this.sizeX = sizeX;
     }
 
     public byte getSizeY() {
         return sizeY;
     }
 
-    public void setSizeY(byte sizeY) {
-        this.sizeY = sizeY;
-    }
-
     public byte[] getStateArray() {
         return stateArray;
     }
 
-    public void setStateArray(byte[] stateArray) {
-        this.stateArray = stateArray;
-    }
-
-    public void findZeroIndex() {
+    public byte getPuzzleIndex(byte puzzleValue) {
         for (byte i = 0; i < sizeX * sizeY; i++) {
-            if (stateArray[i] == 0) {
-                zeroIndex = i;
-                return;
+            if (stateArray[i] == puzzleValue) {
+                return i;
             }
         }
+
+        return -1;
     }
 
-    public byte getZeroX() {
-        return (byte) (zeroIndex % sizeX);
+    public int getDepthLevel() {
+        return depthLevel;
     }
 
-    public byte getZeroY() {
-        return (byte) ((zeroIndex - getZeroX()) / sizeX);
+    public String getPath() {
+        String path = "";
+
+        if (parentState == null) {
+            return path;
+        }
+
+        path = path.concat(parentState.getPath() + previousMove);
+
+        return path;
+    }
+
+    public byte getPuzzleX(byte puzzleValue) {
+        return (byte) (getPuzzleIndex(puzzleValue) % sizeX);
+    }
+
+    public byte getPuzzleY(byte puzzleValue) {
+        return (byte) ((getPuzzleIndex(puzzleValue) - getPuzzleX(puzzleValue)) / sizeX);
     }
 
     public List<MoveDirection> getAvailableMoves() {
         List<MoveDirection> availableMoves = new ArrayList<>();
 
-        // update zero index value before checking available move directions
-        findZeroIndex();
-
-        if (getZeroY() > 0) {
+        if (getPuzzleY(ZERO_PUZZLE) > 0) {
             availableMoves.add(MoveDirection.UP);
         }
-        if (getZeroY() < sizeY - 1) {
+        if (getPuzzleY(ZERO_PUZZLE) < sizeY - 1) {
             availableMoves.add(MoveDirection.DOWN);
         }
-        if (getZeroX() > 0) {
+        if (getPuzzleX(ZERO_PUZZLE) > 0) {
             availableMoves.add(MoveDirection.LEFT);
         }
-        if (getZeroX() < sizeX - 1) {
+        if (getPuzzleX(ZERO_PUZZLE) < sizeX - 1) {
             availableMoves.add(MoveDirection.RIGHT);
         }
 

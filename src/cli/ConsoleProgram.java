@@ -1,9 +1,10 @@
 package cli;
 
-import engine.HammingPuzzleSolver;
-import engine.ManhattanPuzzleSolver;
-import engine.PuzzleSolver;
+import engine.solver.AStarPuzzleSolver;
+import engine.solver.PuzzleSolver;
 import engine.State;
+import engine.heuristic.HammingHeuristic;
+import engine.heuristic.ManhattanHeuristic;
 import input.InitialStateReader;
 import result.ExtraInformation;
 import result.ExtraInformationSaver;
@@ -26,6 +27,8 @@ public class ConsoleProgram {
             String outputSolutionFile = args[3];
             String outputExtraFile = args[4];
 
+            System.out.print(inputFile);
+
             State initialState = readInitialStateFromFile(inputFile);
 
             PuzzleSolver puzzleSolver = null;
@@ -40,10 +43,10 @@ public class ConsoleProgram {
                     break;
                 case A_STAR_STRATEGY:
                     if (selectedStrategyExtra.equals(HAMMING_HEURISTIC)) {
-                        puzzleSolver = new HammingPuzzleSolver();
+                        puzzleSolver = new AStarPuzzleSolver(initialState, new HammingHeuristic());
                     }
                     if (selectedStrategyExtra.equals(MANHATTAN_HEURISTIC)) {
-                        puzzleSolver = new ManhattanPuzzleSolver();
+                        puzzleSolver = new AStarPuzzleSolver(initialState, new ManhattanHeuristic());
                     }
                     break;
                 default:
@@ -59,6 +62,8 @@ public class ConsoleProgram {
 
             saveSolutionInformation(outputSolutionFile, puzzleSolver.getSolutionInformation());
             saveExtraInformation(outputExtraFile, puzzleSolver.getExtraInformation());
+
+            System.out.println(" solved");
         } else {
             System.out.println("Passed incorrect number of arguments");
         }

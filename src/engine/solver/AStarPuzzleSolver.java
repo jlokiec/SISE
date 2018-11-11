@@ -44,7 +44,7 @@ public class AStarPuzzleSolver implements PuzzleSolver {
         PriorityQueue<StateWithPriority> priorityQueue = new PriorityQueue<>();
         priorityQueue.add(new StateWithPriority(currentState, 0));
 
-        while (priorityQueue.size() > 0) {
+        while (!priorityQueue.isEmpty()) {
             currentState = priorityQueue.poll().getState();
 
             visitedStates++;

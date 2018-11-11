@@ -21,7 +21,7 @@ public class StateFactory {
     }
 
     public State getStateAfterMove(State currentState, MoveDirection moveDirection) {
-        byte zeroIndex = currentState.getZeroIndex();
+        byte zeroIndex = currentState.getPuzzleIndex(State.ZERO_PUZZLE);
         byte indexToSwap = -1;
 
         switch (moveDirection) {

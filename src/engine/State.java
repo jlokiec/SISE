@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class State {
+    public static final byte ZERO_PUZZLE = 0;
+
     private byte sizeX;
     private byte sizeY;
     private byte[] stateArray;
@@ -32,9 +34,9 @@ public class State {
         return stateArray;
     }
 
-    public byte getZeroIndex() {
+    public byte getPuzzleIndex(byte puzzleValue) {
         for (byte i = 0; i < sizeX * sizeY; i++) {
-            if (stateArray[i] == 0) {
+            if (stateArray[i] == puzzleValue) {
                 return i;
             }
         }
@@ -58,27 +60,27 @@ public class State {
         return path;
     }
 
-    public byte getZeroX() {
-        return (byte) (getZeroIndex() % sizeX);
+    public byte getPuzzleX(byte puzzleValue) {
+        return (byte) (getPuzzleIndex(puzzleValue) % sizeX);
     }
 
-    public byte getZeroY() {
-        return (byte) ((getZeroIndex() - getZeroX()) / sizeX);
+    public byte getPuzzleY(byte puzzleValue) {
+        return (byte) ((getPuzzleIndex(puzzleValue) - getPuzzleX(puzzleValue)) / sizeX);
     }
 
     public List<MoveDirection> getAvailableMoves() {
         List<MoveDirection> availableMoves = new ArrayList<>();
 
-        if (getZeroY() > 0) {
+        if (getPuzzleY(ZERO_PUZZLE) > 0) {
             availableMoves.add(MoveDirection.UP);
         }
-        if (getZeroY() < sizeY - 1) {
+        if (getPuzzleY(ZERO_PUZZLE) < sizeY - 1) {
             availableMoves.add(MoveDirection.DOWN);
         }
-        if (getZeroX() > 0) {
+        if (getPuzzleX(ZERO_PUZZLE) > 0) {
             availableMoves.add(MoveDirection.LEFT);
         }
-        if (getZeroX() < sizeX - 1) {
+        if (getPuzzleX(ZERO_PUZZLE) < sizeX - 1) {
             availableMoves.add(MoveDirection.RIGHT);
         }
 

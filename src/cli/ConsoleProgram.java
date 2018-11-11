@@ -1,7 +1,7 @@
 package cli;
 
-import engine.AStarPuzzleSolver;
-import engine.PuzzleSolver;
+import engine.solver.AStarPuzzleSolver;
+import engine.solver.PuzzleSolver;
 import engine.State;
 import engine.heuristic.HammingHeuristic;
 import engine.heuristic.ManhattanHeuristic;

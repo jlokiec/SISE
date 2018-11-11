@@ -1,5 +1,9 @@
-package engine;
+package engine.solver;
 
+import engine.MoveDirection;
+import engine.State;
+import engine.StateFactory;
+import engine.StateWithPriority;
 import engine.heuristic.Heuristic;
 import result.ExtraInformation;
 import result.SolutionInformation;

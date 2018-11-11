@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class ExtraInformationSaver implements InformationSaver {
+    private static final String COMPUTATION_TIME_FORMAT = "%.3f";
+
     private String fileName;
     private ExtraInformation extraInformation;
 
@@ -20,7 +22,9 @@ public class ExtraInformationSaver implements InformationSaver {
             printWriter.println(extraInformation.getVisitedStates());
             printWriter.println(extraInformation.getProcessedStates());
             printWriter.println(extraInformation.getMaxRecursionDepth());
-            printWriter.println(extraInformation.getComputationTime());
+
+            String compTimeStr = String.format(COMPUTATION_TIME_FORMAT, extraInformation.getComputationTime());
+            printWriter.println(compTimeStr);
         } catch (IOException e) {
             System.out.println("Unable to write extra information to file");
         }

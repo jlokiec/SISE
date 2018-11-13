@@ -1,10 +1,10 @@
 package cli;
 
-import engine.solver.AStarPuzzleSolver;
-import engine.solver.PuzzleSolver;
 import engine.State;
 import engine.heuristic.HammingHeuristic;
 import engine.heuristic.ManhattanHeuristic;
+import engine.solver.AStarPuzzleSolver;
+import engine.solver.PuzzleSolver;
 import input.InitialStateReader;
 import result.ExtraInformation;
 import result.ExtraInformationSaver;

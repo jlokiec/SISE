@@ -1,5 +1,7 @@
-package engine;
+package engine.solver;
 
+import engine.MoveDirection;
+import engine.State;
 import result.ExtraInformation;
 import result.SolutionInformation;
 

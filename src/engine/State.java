@@ -89,7 +89,7 @@ public class State {
         return availableMoves;
     }
 
-    Queue<State> getNeighbors() {
+    public Queue<State> getNeighbors() {
         LinkedList<State> neighbors = new LinkedList<>();
         List<MoveDirection> possibleDirections = getAvailableMoves();
 

@@ -1,4 +1,4 @@
-package engine;
+package engine.solver;
 
 import result.ExtraInformation;
 import result.SolutionInformation;

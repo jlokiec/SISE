@@ -2,12 +2,17 @@ package engine.solver;
 
 import engine.MoveDirection;
 import engine.State;
+import engine.StateFactory;
 import result.ExtraInformation;
 import result.SolutionInformation;
 
 import java.util.*;
 
+import static java.lang.Thread.sleep;
+
 public class BreadthFirstSearchSolver implements PuzzleSolver {
+    private ExtraInformation extraInformation;
+    private SolutionInformation solutionInformation;
 
     /**
      * Stan docelowy
@@ -17,7 +22,7 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
     /**
      * Stan aktualny
      */
-    protected State actualState;
+    protected State currentState;
 
     /**
      * Lista stanów otwartych czyli takich, które nie są jeszcze w pełni przeszukane
@@ -34,82 +39,70 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
      */
     protected LinkedList<MoveDirection> directions;
 
-    public State getGoalState() {
-        return goalState;
+    /**
+     * Referencja do fabryki stanów układanki
+     */
+    protected StateFactory stateFactory;
+
+    public BreadthFirstSearchSolver(State initialState) {
+        stateFactory = new StateFactory(initialState.getSizeX(), initialState.getSizeY());
+        goalState = stateFactory.getSolvedState();
+        currentState = initialState;
+        listOfOpenStates = new LinkedList<>();
+        listOfClosedStates = new LinkedHashSet<>();
+        directions = new LinkedList<>();
+
+        extraInformation = new ExtraInformation();
+        solutionInformation = new SolutionInformation();
     }
 
-    public void setGoalState(State goalState) {
-        this.goalState = goalState;
-    }
-
-    public State getActualState() {
-        return actualState;
-    }
-
-    public void setActualState(State actualState) {
-        this.actualState = actualState;
-    }
-
-    public LinkedList<State> getListOfOpenStates() {
-        return listOfOpenStates;
-    }
-
-    public void setListOfOpenStates(LinkedList<State> listOfOpenStates) {
-        this.listOfOpenStates = listOfOpenStates;
-    }
-
-    public LinkedList<MoveDirection> getDirections() {
-        return directions;
-    }
-
-    public void setDirections(LinkedList<MoveDirection> directions) {
-        this.directions = directions;
-    }
-
-    public Set<State> getListOfClosedStates() {
-        return listOfClosedStates;
-    }
-
-    public void setListOfClosedStates(Set<State> listOfClosedStates) {
-        this.listOfClosedStates = listOfClosedStates;
-    }
-
-    public BreadthFirstSearchSolver(State initialState, State goalState) {
-        setGoalState(goalState);
-        setListOfOpenStates(new LinkedList<>());
-        setListOfClosedStates(new LinkedHashSet<>());
-        setDirections(new LinkedList<>());
-        getListOfOpenStates().addFirst(initialState);
-    }
-
-    private boolean isSolved(State state) {
-        return (getGoalState() == state ? true : false);
+    private boolean isSolved() {
+        return (Arrays.equals(currentState.getStateArray(), goalState.getStateArray()));
     }
 
     @Override
     public void solve() {
-        while(!listOfOpenStates.isEmpty()) {
-            setActualState(listOfOpenStates.poll());
-            listOfClosedStates.add(actualState);
+        int visitedStates = 0;
+        long startTimestamp = System.nanoTime();
 
-            if(isSolved(getActualState()))
+        listOfOpenStates.addFirst(currentState);
+
+        while (!listOfOpenStates.isEmpty()) {
+            currentState = listOfOpenStates.pollFirst();
+            listOfClosedStates.add(currentState);
+
+            if (isSolved()) {
+                long endTimestamp = System.nanoTime();
+
+                solutionInformation.setSolutionLength(currentState.getDepthLevel());
+                solutionInformation.setSolutionMoves(currentState.getPath());
+
+                extraInformation.setVisitedStates(visitedStates);
+                extraInformation.setProcessedStates(listOfClosedStates.size());
+                extraInformation.setMaxRecursionDepth(currentState.getDepthLevel());
+                extraInformation.setSolutionLength(currentState.getDepthLevel());
+
+                double computationTime = (endTimestamp - startTimestamp) / 100000.0;
+                extraInformation.setComputationTime(computationTime);
                 return; // Success
             }
 
-            for (State neighbor : actualState.getNeighbors()) {
-                if(!(getListOfOpenStates().contains(neighbor) || getListOfClosedStates().contains(neighbor))) {
-                    getListOfOpenStates().addFirst(neighbor);
+            for (State neighbor : stateFactory.getNeighbors(currentState)) {
+                if (!(listOfOpenStates.contains(neighbor) || listOfClosedStates.contains(neighbor))) {
+                    visitedStates++;
+                    listOfOpenStates.addLast(neighbor);
                 }
             }
         }
+    }
 
     @Override
     public ExtraInformation getExtraInformation() {
-        return null;
+        return extraInformation;
     }
 
     @Override
     public SolutionInformation getSolutionInformation() {
-        return null;
+        return solutionInformation;
     }
 }

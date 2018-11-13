@@ -89,18 +89,6 @@ public class State {
         return availableMoves;
     }
 
-    public Queue<State> getNeighbors() {
-        LinkedList<State> neighbors = new LinkedList<>();
-        List<MoveDirection> possibleDirections = getAvailableMoves();
-
-        for (MoveDirection direction : possibleDirections) {
-            State neighbor = new State();
-            neighbor.setStateArray(this.getStateArray());
-            //neighbor.move(direction);
-            neighbors.add(neighbor);
-        }
-        return neighbors;
-    }
 
     @Override
     public String toString() {

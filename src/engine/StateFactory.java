@@ -1,6 +1,9 @@
 package engine;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class StateFactory {
     private byte sizeX;
@@ -42,6 +45,17 @@ public class StateFactory {
         byte[] swappedStateArray = swap(currentState.getStateArray(), zeroIndex, indexToSwap);
 
         return new State(sizeX, sizeY, swappedStateArray, currentState, moveDirection, currentState.getDepthLevel() + 1);
+    }
+
+    public Queue<State> getNeighbors(State currentState) {
+        LinkedList<State> neighbors = new LinkedList<>();
+        List<MoveDirection> possibleDirections = currentState.getAvailableMoves();
+
+        for (MoveDirection direction : possibleDirections) {
+            State neighbor = getStateAfterMove(currentState, direction);
+            neighbors.add(neighbor);
+        }
+        return neighbors;
     }
 
     private byte[] swap(byte[] array, byte index1, byte index2) {

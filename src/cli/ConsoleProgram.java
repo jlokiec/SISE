@@ -4,6 +4,8 @@ import engine.State;
 import engine.heuristic.HammingHeuristic;
 import engine.heuristic.ManhattanHeuristic;
 import engine.solver.AStarPuzzleSolver;
+import engine.solver.BreadthFirstSearchSolver;
+import engine.solver.DepthFirstSearchSolver;
 import engine.solver.PuzzleSolver;
 import input.InitialStateReader;
 import result.ExtraInformation;
@@ -36,10 +38,10 @@ public class ConsoleProgram {
             // TODO: implement running selected strategy
             switch (selectedStrategy) {
                 case BFS_STRATEGY:
-                    // TODO: implement running BFS
+                    puzzleSolver = new BreadthFirstSearchSolver(initialState);
                     break;
                 case DFS_STRATEGY:
-                    // TODO: implement running DFS
+                    puzzleSolver = new DepthFirstSearchSolver(initialState);
                     break;
                 case A_STAR_STRATEGY:
                     if (selectedStrategyExtra.equals(HAMMING_HEURISTIC)) {

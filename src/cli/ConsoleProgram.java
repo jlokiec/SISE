@@ -1,10 +1,10 @@
 package cli;
 
-import engine.solver.AStarPuzzleSolver;
-import engine.solver.PuzzleSolver;
 import engine.State;
 import engine.heuristic.HammingHeuristic;
 import engine.heuristic.ManhattanHeuristic;
+import engine.solver.AStarPuzzleSolver;
+import engine.solver.PuzzleSolver;
 import input.InitialStateReader;
 import result.ExtraInformation;
 import result.ExtraInformationSaver;
@@ -27,7 +27,7 @@ public class ConsoleProgram {
             String outputSolutionFile = args[3];
             String outputExtraFile = args[4];
 
-            System.out.print(inputFile);
+            System.out.print(inputFile + ": ");
 
             State initialState = readInitialStateFromFile(inputFile);
 
@@ -63,7 +63,7 @@ public class ConsoleProgram {
             saveSolutionInformation(outputSolutionFile, puzzleSolver.getSolutionInformation());
             saveExtraInformation(outputExtraFile, puzzleSolver.getExtraInformation());
 
-            System.out.println(" solved");
+            System.out.println("solved");
         } else {
             System.out.println("Passed incorrect number of arguments");
         }

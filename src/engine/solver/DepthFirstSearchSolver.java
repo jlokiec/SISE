@@ -84,7 +84,7 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
                 extraInformation.setComputationTime(computationTime);
                 return; // Success
             }
-            
+
             for (State neighbor : stateFactory.getNeighbors(currentState)) {
                 if (!(listOfOpenStates.contains(neighbor) || listOfClosedStates.contains(neighbor))) {
                     visitedStates++;

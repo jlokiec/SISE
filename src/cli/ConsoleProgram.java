@@ -1,6 +1,7 @@
 package cli;
 
 import engine.State;
+import engine.MoveOrder;
 import engine.heuristic.HammingHeuristic;
 import engine.heuristic.ManhattanHeuristic;
 import engine.solver.AStarPuzzleSolver;
@@ -12,6 +13,10 @@ import result.ExtraInformation;
 import result.ExtraInformationSaver;
 import result.SolutionInformation;
 import result.SolutionInformationSaver;
+
+import java.security.InvalidParameterException;
+
+import static java.lang.System.exit;
 
 public class ConsoleProgram {
     private static final String BFS_STRATEGY = "bfs";
@@ -34,14 +39,28 @@ public class ConsoleProgram {
             State initialState = readInitialStateFromFile(inputFile);
 
             PuzzleSolver puzzleSolver = null;
+            MoveOrder moveStrategy;
 
-            // TODO: implement running selected strategy
             switch (selectedStrategy) {
                 case BFS_STRATEGY:
-                    puzzleSolver = new BreadthFirstSearchSolver(initialState);
+                    try {
+                        moveStrategy = MoveOrder.Create(selectedStrategyExtra);
+                    }
+                    catch(InvalidParameterException e) {
+                        System.out.println("Wrong parameter selectedStrategyExtra. Falling back to default move strategy." + e.getMessage());
+                        moveStrategy = MoveOrder.Create("RDUL");
+                    }
+                    puzzleSolver = new BreadthFirstSearchSolver(initialState, moveStrategy);
                     break;
                 case DFS_STRATEGY:
-                    puzzleSolver = new DepthFirstSearchSolver(initialState);
+                    try {
+                        moveStrategy = MoveOrder.Create(selectedStrategyExtra);
+                    }
+                    catch(InvalidParameterException e) {
+                        System.out.println("Wrong parameter selectedStrategyExtra. Falling back to default move strategy." + e.getMessage());
+                        moveStrategy = MoveOrder.Create("RDUL");
+                    }
+                    puzzleSolver = new DepthFirstSearchSolver(initialState, moveStrategy);
                     break;
                 case A_STAR_STRATEGY:
                     if (selectedStrategyExtra.equals(HAMMING_HEURISTIC)) {

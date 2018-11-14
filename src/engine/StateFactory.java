@@ -47,7 +47,7 @@ public class StateFactory {
         return new State(sizeX, sizeY, swappedStateArray, currentState, moveDirection, currentState.getDepthLevel() + 1);
     }
 
-    public Queue<State> getNeighbors(State currentState) {
+    public Queue<State> getNeighbors(State currentState, MoveOrder moveOrder) {
         LinkedList<State> neighbors = new LinkedList<>();
         List<MoveDirection> possibleDirections = currentState.getAvailableMoves();
 

@@ -1,6 +1,7 @@
 package engine.solver;
 
 import engine.MoveDirection;
+import engine.MoveOrder;
 import engine.State;
 import engine.StateFactory;
 import result.ExtraInformation;
@@ -25,6 +26,11 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
     protected State currentState;
 
     /**
+     * Wybrana strategia przeszukiwania
+     */
+    protected MoveOrder moveStrategy;
+
+    /**
      * Lista stanów otwartych czyli takich, które nie są jeszcze w pełni przeszukane
      */
     protected LinkedList<State> listOfOpenStates;
@@ -44,13 +50,14 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
      */
     protected StateFactory stateFactory;
 
-    public BreadthFirstSearchSolver(State initialState) {
+    public BreadthFirstSearchSolver(State initialState, MoveOrder moveOrder) {
         stateFactory = new StateFactory(initialState.getSizeX(), initialState.getSizeY());
         goalState = stateFactory.getSolvedState();
         currentState = initialState;
         listOfOpenStates = new LinkedList<>();
         listOfClosedStates = new LinkedHashSet<>();
         directions = new LinkedList<>();
+        moveStrategy = moveOrder;
 
         extraInformation = new ExtraInformation();
         solutionInformation = new SolutionInformation();
@@ -66,6 +73,7 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
         long startTimestamp = System.nanoTime();
 
         listOfOpenStates.addFirst(currentState);
+        visitedStates++;
 
         while (!listOfOpenStates.isEmpty()) {
             currentState = listOfOpenStates.pollFirst();
@@ -87,7 +95,7 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
                 return; // Success
             }
 
-            for (State neighbor : stateFactory.getNeighbors(currentState)) {
+            for (State neighbor : stateFactory.getNeighbors(currentState, moveStrategy)) {
                 if (!(listOfOpenStates.contains(neighbor) || listOfClosedStates.contains(neighbor))) {
                     visitedStates++;
                     listOfOpenStates.addLast(neighbor);

@@ -16,8 +16,6 @@ import result.SolutionInformationSaver;
 
 import java.security.InvalidParameterException;
 
-import static java.lang.System.exit;
-
 public class ConsoleProgram {
     private static final String BFS_STRATEGY = "bfs";
     private static final String DFS_STRATEGY = "dfs";
@@ -39,20 +37,11 @@ public class ConsoleProgram {
             State initialState = readInitialStateFromFile(inputFile);
 
             PuzzleSolver puzzleSolver = null;
-            MoveOrder moveStrategy;
 
             switch (selectedStrategy) {
                 case BFS_STRATEGY:
-                    try {
-                        moveStrategy = MoveOrder.Create(selectedStrategyExtra);
-                    }
-                    catch(InvalidParameterException e) {
-                        System.out.println("Wrong parameter selectedStrategyExtra. Falling back to default move strategy." + e.getMessage());
-                        moveStrategy = MoveOrder.Create("RDUL");
-                    }
-                    puzzleSolver = new BreadthFirstSearchSolver(initialState, moveStrategy);
-                    break;
                 case DFS_STRATEGY:
+                    MoveOrder moveStrategy;
                     try {
                         moveStrategy = MoveOrder.Create(selectedStrategyExtra);
                     }
@@ -60,7 +49,7 @@ public class ConsoleProgram {
                         System.out.println("Wrong parameter selectedStrategyExtra. Falling back to default move strategy." + e.getMessage());
                         moveStrategy = MoveOrder.Create("RDUL");
                     }
-                    puzzleSolver = new DepthFirstSearchSolver(initialState, moveStrategy);
+                    puzzleSolver = (selectedStrategy == BFS_STRATEGY ?  new BreadthFirstSearchSolver(initialState, moveStrategy) : new DepthFirstSearchSolver(initialState, moveStrategy));
                     break;
                 case A_STAR_STRATEGY:
                     if (selectedStrategyExtra.equals(HAMMING_HEURISTIC)) {

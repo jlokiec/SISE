@@ -71,6 +71,7 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
         long startTimestamp = System.nanoTime();
 
         listOfOpenStates.push(currentState);
+        visitedStates++;
 
         while (!listOfOpenStates.isEmpty()) {
             currentState = listOfOpenStates.pop();
@@ -93,6 +94,8 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
             }
 
             for (State neighbor : stateFactory.getNeighbors(currentState, moveStrategy)) {
+                if(currentState.getDepthLevel() > 20)
+                    break;
                 if (!(listOfOpenStates.contains(neighbor) || listOfClosedStates.contains(neighbor))) {
                     visitedStates++;
                     listOfOpenStates.push(neighbor);
@@ -103,11 +106,11 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
 
     @Override
     public ExtraInformation getExtraInformation() {
-        return null;
+        return extraInformation;
     }
 
     @Override
     public SolutionInformation getSolutionInformation() {
-        return null;
+        return solutionInformation;
     }
 }

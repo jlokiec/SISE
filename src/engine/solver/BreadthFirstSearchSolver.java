@@ -9,8 +9,6 @@ import result.SolutionInformation;
 
 import java.util.*;
 
-import static java.lang.Thread.sleep;
-
 public class BreadthFirstSearchSolver implements PuzzleSolver {
     private ExtraInformation extraInformation;
     private SolutionInformation solutionInformation;
@@ -96,6 +94,8 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
             }
 
             for (State neighbor : stateFactory.getNeighbors(currentState, moveStrategy)) {
+                if(currentState.getDepthLevel() > 20)
+                    break;
                 if (!(listOfOpenStates.contains(neighbor) || listOfClosedStates.contains(neighbor))) {
                     visitedStates++;
                     listOfOpenStates.addLast(neighbor);

@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.security.InvalidParameterException;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -101,7 +100,16 @@ class MoveOrderTest {
                 Arguments.of(MoveOrder.LEFT_UP_DOWN_RIGHT, Arrays.asList(LEFT, UP, DOWN, RIGHT), Arrays.asList(RIGHT, DOWN, UP, LEFT)),
                 Arguments.of(MoveOrder.LEFT_UP_RIGHT_DOWN, Arrays.asList(LEFT, UP, RIGHT, DOWN), Arrays.asList(RIGHT, UP, DOWN, LEFT)),
                 Arguments.of(MoveOrder.UP_LEFT_DOWN_RIGHT, Arrays.asList(UP, LEFT, DOWN, RIGHT), Arrays.asList(DOWN, UP, RIGHT, LEFT)),
-                Arguments.of(MoveOrder.UP_LEFT_RIGHT_DOWN, Arrays.asList(UP, LEFT, RIGHT, DOWN), Arrays.asList(RIGHT, DOWN, LEFT, UP))
+                Arguments.of(MoveOrder.UP_LEFT_RIGHT_DOWN, Arrays.asList(UP, LEFT, RIGHT, DOWN), Arrays.asList(RIGHT, DOWN, LEFT, UP)),
+
+                Arguments.of(MoveOrder.RIGHT_DOWN_UP_LEFT, Arrays.asList(DOWN, UP, LEFT), Arrays.asList(LEFT, UP, DOWN)),
+                Arguments.of(MoveOrder.RIGHT_DOWN_LEFT_UP, Arrays.asList(RIGHT, DOWN, UP), Arrays.asList(UP, DOWN, RIGHT)),
+                Arguments.of(MoveOrder.DOWN_RIGHT_UP_LEFT, Arrays.asList(RIGHT, UP, LEFT), Arrays.asList(UP, LEFT, RIGHT)),
+                Arguments.of(MoveOrder.DOWN_RIGHT_LEFT_UP, Arrays.asList(DOWN, RIGHT, LEFT), Arrays.asList(LEFT, DOWN, RIGHT)),
+                Arguments.of(MoveOrder.LEFT_UP_DOWN_RIGHT, Arrays.asList(LEFT, UP, RIGHT), Arrays.asList(RIGHT, UP, LEFT)),
+                Arguments.of(MoveOrder.LEFT_UP_RIGHT_DOWN, Arrays.asList(LEFT, UP, DOWN), Arrays.asList(UP, DOWN, LEFT)),
+                Arguments.of(MoveOrder.UP_LEFT_DOWN_RIGHT, Arrays.asList(UP, DOWN, RIGHT), Arrays.asList(DOWN, UP, RIGHT)),
+                Arguments.of(MoveOrder.UP_LEFT_RIGHT_DOWN, Arrays.asList(UP, LEFT, RIGHT), Arrays.asList(RIGHT, LEFT, UP))
         );
     }
 }

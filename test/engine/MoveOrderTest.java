@@ -2,11 +2,15 @@ package engine;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static engine.MoveDirection.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -81,16 +85,23 @@ class MoveOrderTest {
         Assertions.assertThrows(InvalidParameterException.class, () -> MoveOrder.Create("WRONG"));
     }
 
-    @Test
-    void getMovesInTheRightOrder() {
-        MoveOrder moveOrder = MoveOrder.Create("ULRD");
-        List<MoveDirection> possibleDirections = new LinkedList<>();
-        possibleDirections.add(LEFT);
-        possibleDirections.add(UP);
-        possibleDirections.add(RIGHT);
-
+    @ParameterizedTest
+    @MethodSource("generateDataForGetMovesInTheRightOrder")
+    void getMovesInTheRightOrder(MoveOrder moveOrder, List<MoveDirection> expected, List<MoveDirection> possibleDirections) {
         possibleDirections.sort(new MoveDirectionComparator(moveOrder));
 
-        assertEquals(new LinkedList<>(Arrays.asList(UP, LEFT, RIGHT)), possibleDirections);
+        assertEquals(expected, possibleDirections);
+    }
+    static Stream<Arguments> generateDataForGetMovesInTheRightOrder() {
+        return Stream.of(
+                Arguments.of(MoveOrder.RIGHT_DOWN_UP_LEFT, Arrays.asList(RIGHT, DOWN, UP, LEFT), Arrays.asList(LEFT, UP, DOWN, RIGHT)),
+                Arguments.of(MoveOrder.RIGHT_DOWN_LEFT_UP, Arrays.asList(RIGHT, DOWN, LEFT, UP), Arrays.asList(UP, LEFT, DOWN, RIGHT)),
+                Arguments.of(MoveOrder.DOWN_RIGHT_UP_LEFT, Arrays.asList(DOWN, RIGHT, UP, LEFT), Arrays.asList(UP, DOWN, LEFT, RIGHT)),
+                Arguments.of(MoveOrder.DOWN_RIGHT_LEFT_UP, Arrays.asList(DOWN, RIGHT, LEFT, UP), Arrays.asList(UP, LEFT, DOWN, RIGHT)),
+                Arguments.of(MoveOrder.LEFT_UP_DOWN_RIGHT, Arrays.asList(LEFT, UP, DOWN, RIGHT), Arrays.asList(RIGHT, DOWN, UP, LEFT)),
+                Arguments.of(MoveOrder.LEFT_UP_RIGHT_DOWN, Arrays.asList(LEFT, UP, RIGHT, DOWN), Arrays.asList(RIGHT, UP, DOWN, LEFT)),
+                Arguments.of(MoveOrder.UP_LEFT_DOWN_RIGHT, Arrays.asList(UP, LEFT, DOWN, RIGHT), Arrays.asList(DOWN, UP, RIGHT, LEFT)),
+                Arguments.of(MoveOrder.UP_LEFT_RIGHT_DOWN, Arrays.asList(UP, LEFT, RIGHT, DOWN), Arrays.asList(RIGHT, DOWN, LEFT, UP))
+        );
     }
 }

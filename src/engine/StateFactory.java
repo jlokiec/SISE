@@ -50,7 +50,7 @@ public class StateFactory {
     public Queue<State> getNeighbors(State currentState, MoveOrder moveOrder) {
         LinkedList<State> neighbors = new LinkedList<>();
         List<MoveDirection> possibleDirections = currentState.getAvailableMoves();
-
+        possibleDirections.sort(new MoveDirectionComparator(moveOrder));
         for (MoveDirection direction : possibleDirections) {
             State neighbor = getStateAfterMove(currentState, direction);
             neighbors.add(neighbor);

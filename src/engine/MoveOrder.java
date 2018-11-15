@@ -1,6 +1,8 @@
 package engine;
 
 import java.security.InvalidParameterException;
+import java.util.Comparator;
+import java.util.List;
 
 public enum MoveOrder {
     RIGHT_DOWN_UP_LEFT("RDUL"),
@@ -18,7 +20,7 @@ public enum MoveOrder {
         this.moveOrderShort = moveOrderShort;
     }
 
-    public static MoveOrder Create(String _moveOrderShort) {
+    public static MoveOrder Create(String _moveOrderShort) throws InvalidParameterException {
         if(_moveOrderShort.equals(RIGHT_DOWN_UP_LEFT.toString()))
             return RIGHT_DOWN_UP_LEFT;
         if(_moveOrderShort.equals(RIGHT_DOWN_LEFT_UP.toString()))

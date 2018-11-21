@@ -29,12 +29,12 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
     protected MoveOrder moveStrategy;
 
     /**
-     * Lista stanów otwartych czyli takich, które nie są jeszcze w pełni przeszukane
+     * Lista stanów otwartych czyli takich, które nie są jeszcze w pełni przeszukane (inaczej zwane frontier)
      */
     protected Stack<State> listOfOpenStates;
 
     /**
-     * Lista stanów zamkniętych czyli takich, które są już w całości przeszukane
+     * Lista stanów zamkniętych czyli takich, które są już w całości przeszukane (inaczej zwane explored)
      */
     protected Set<State> listOfClosedStates;
 
@@ -47,6 +47,10 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
      * Referencja do fabryki stanów układanki
      */
     protected StateFactory stateFactory;
+    /**
+     * Maksymalna głębokość rekursji
+     */
+    protected int maxDepth;
 
     public DepthFirstSearchSolver(State initialState, MoveOrder moveOrder) {
         stateFactory = new StateFactory(initialState.getSizeX(), initialState.getSizeY());
@@ -56,6 +60,7 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
         listOfClosedStates = new LinkedHashSet<>();
         directions = new LinkedList<>();
         moveStrategy = moveOrder;
+        maxDepth = 1;
 
         extraInformation = new ExtraInformation();
         solutionInformation = new SolutionInformation();
@@ -85,7 +90,7 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
 
                 extraInformation.setVisitedStates(visitedStates);
                 extraInformation.setProcessedStates(listOfClosedStates.size());
-                extraInformation.setMaxRecursionDepth(currentState.getDepthLevel());
+                extraInformation.setMaxRecursionDepth(maxDepth);
                 extraInformation.setSolutionLength(currentState.getDepthLevel());
 
                 double computationTime = (endTimestamp - startTimestamp) / 100000.0;
@@ -96,6 +101,8 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
             for (State neighbor : stateFactory.getNeighbors(currentState, moveStrategy)) {
                 if(currentState.getDepthLevel() > 20)
                     break;
+                if(currentState.getDepthLevel() > maxDepth)
+                    maxDepth = currentState.getDepthLevel();
                 if (!(listOfOpenStates.contains(neighbor) || listOfClosedStates.contains(neighbor))) {
                     visitedStates++;
                     listOfOpenStates.push(neighbor);

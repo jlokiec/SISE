@@ -29,12 +29,12 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
     protected MoveOrder moveStrategy;
 
     /**
-     * Lista stanów otwartych czyli takich, które nie są jeszcze w pełni przeszukane
+     * Lista stanów otwartych czyli takich, które nie są jeszcze w pełni przeszukane (inaczej zwane frontier)
      */
     protected LinkedList<State> listOfOpenStates;
 
     /**
-     * Lista stanów zamkniętych czyli takich, które są już w całości przeszukane
+     * Lista stanów zamkniętych czyli takich, które są już w całości przeszukane (inaczej zwane explored)
      */
     protected Set<State> listOfClosedStates;
 
@@ -48,6 +48,11 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
      */
     protected StateFactory stateFactory;
 
+    /**
+     * Maksymalna głębokość rekursji
+     */
+    protected int maxDepth;
+
     public BreadthFirstSearchSolver(State initialState, MoveOrder moveOrder) {
         stateFactory = new StateFactory(initialState.getSizeX(), initialState.getSizeY());
         goalState = stateFactory.getSolvedState();
@@ -56,6 +61,7 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
         listOfClosedStates = new LinkedHashSet<>();
         directions = new LinkedList<>();
         moveStrategy = moveOrder;
+        maxDepth = 1;
 
         extraInformation = new ExtraInformation();
         solutionInformation = new SolutionInformation();
@@ -85,7 +91,7 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
 
                 extraInformation.setVisitedStates(visitedStates);
                 extraInformation.setProcessedStates(listOfClosedStates.size());
-                extraInformation.setMaxRecursionDepth(currentState.getDepthLevel());
+                extraInformation.setMaxRecursionDepth(maxDepth);
                 extraInformation.setSolutionLength(currentState.getDepthLevel());
 
                 double computationTime = (endTimestamp - startTimestamp) / 100000.0;
@@ -97,6 +103,8 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
                 if(currentState.getDepthLevel() > 20)
                     break;
                 if (!(listOfOpenStates.contains(neighbor) || listOfClosedStates.contains(neighbor))) {
+                    if(currentState.getDepthLevel() > maxDepth)
+                        maxDepth = currentState.getDepthLevel();
                     visitedStates++;
                     listOfOpenStates.addLast(neighbor);
                 }

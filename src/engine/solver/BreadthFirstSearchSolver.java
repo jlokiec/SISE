@@ -49,9 +49,16 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
     protected StateFactory stateFactory;
 
     /**
-     * Maksymalna głębokość rekursji
+     * Maksymalna osiągnięta głębokość rekursji
      */
     protected int maxDepth;
+
+    /**
+     * Maksymalna głębokość rekursji
+     */
+    protected final int MAXIMUM_RECURSION_DEPTH = 20;
+
+
 
     public BreadthFirstSearchSolver(State initialState, MoveOrder moveOrder) {
         stateFactory = new StateFactory(initialState.getSizeX(), initialState.getSizeY());
@@ -67,51 +74,62 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
         solutionInformation = new SolutionInformation();
     }
 
-    private boolean isSolved() {
-        return (Arrays.equals(currentState.getStateArray(), goalState.getStateArray()));
+    private boolean isSolved(State state) {
+        return (Arrays.equals(state.getStateArray(), goalState.getStateArray()));
     }
 
     @Override
     public void solve() {
         int visitedStates = 0;
+        int processedStates = 0;
         long startTimestamp = System.nanoTime();
 
         listOfOpenStates.addFirst(currentState);
-        visitedStates++;
 
         while (!listOfOpenStates.isEmpty()) {
             currentState = listOfOpenStates.pollFirst();
-            listOfClosedStates.add(currentState);
+            processedStates++;
 
-            if (isSolved()) {
-                long endTimestamp = System.nanoTime();
+            if(currentState.getDepthLevel() > maxDepth)
+                maxDepth = currentState.getDepthLevel();
 
-                solutionInformation.setSolutionLength(currentState.getDepthLevel());
-                solutionInformation.setSolutionMoves(currentState.getPath());
-
-                extraInformation.setVisitedStates(visitedStates);
-                extraInformation.setProcessedStates(listOfClosedStates.size());
-                extraInformation.setMaxRecursionDepth(maxDepth);
-                extraInformation.setSolutionLength(currentState.getDepthLevel());
-
-                double computationTime = (endTimestamp - startTimestamp) / 100000.0;
-                extraInformation.setComputationTime(computationTime);
+            if (isSolved(currentState)) {
+                setInformation(currentState, startTimestamp, visitedStates, processedStates);
                 return; // Success
             }
 
-            for (State neighbor : stateFactory.getNeighbors(currentState, moveStrategy)) {
-                if(currentState.getDepthLevel() > 20)
-                    break;
-                if (!(listOfOpenStates.contains(neighbor) || listOfClosedStates.contains(neighbor))) {
-                    if(currentState.getDepthLevel() > maxDepth)
-                        maxDepth = currentState.getDepthLevel();
-                    visitedStates++;
+            if(currentState.getDepthLevel() < MAXIMUM_RECURSION_DEPTH) {
+                Queue<State> neighbors = stateFactory.getNeighbors(currentState, moveStrategy);
+                for (State neighbor : neighbors) {
                     listOfOpenStates.addLast(neighbor);
+                    if(listOfClosedStates.contains(neighbor)) {
+                        neighbors.remove(neighbor);
+                    }
+                    if (isSolved(neighbor)) {
+                        setInformation(neighbor, startTimestamp, visitedStates, processedStates);
+                        return; // Success
+                    }
+                    listOfClosedStates.add(currentState);
+                    visitedStates++;
                 }
             }
         }
     }
 
+    private void setInformation(State state, long startTimestamp, int visitedStates, int processedStates) {
+        long endTimestamp = System.nanoTime();
+
+        solutionInformation.setSolutionLength(state.getDepthLevel());
+        solutionInformation.setSolutionMoves(state.getPath());
+
+        extraInformation.setVisitedStates(visitedStates);
+        extraInformation.setProcessedStates(processedStates);
+        extraInformation.setMaxRecursionDepth(maxDepth);
+        extraInformation.setSolutionLength(state.getDepthLevel());
+
+        double computationTime = (endTimestamp - startTimestamp) / 100000.0;
+        extraInformation.setComputationTime(computationTime);
+    }
     @Override
     public ExtraInformation getExtraInformation() {
         return extraInformation;

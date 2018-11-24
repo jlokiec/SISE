@@ -1,9 +1,6 @@
 package engine;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class StateFactory {
     private byte sizeX;
@@ -54,6 +51,13 @@ public class StateFactory {
         for (MoveDirection direction : possibleDirections) {
             State neighbor = getStateAfterMove(currentState, direction);
             neighbors.add(neighbor);
+        }
+        return neighbors;
+    }
+    public Queue<State> getNeighborsReversed(State currentState, MoveOrder moveOrder) {
+        LinkedList<State> neighbors = new LinkedList<>();
+        for(State neighbor : getNeighbors(currentState, moveOrder)) {
+            neighbors.addLast(neighbor);
         }
         return neighbors;
     }

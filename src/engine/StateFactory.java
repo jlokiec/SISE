@@ -57,7 +57,7 @@ public class StateFactory {
     public Queue<State> getNeighborsReversed(State currentState, MoveOrder moveOrder) {
         LinkedList<State> neighbors = new LinkedList<>();
         for(State neighbor : getNeighbors(currentState, moveOrder)) {
-            neighbors.addLast(neighbor);
+            neighbors.addFirst(neighbor);
         }
         return neighbors;
     }

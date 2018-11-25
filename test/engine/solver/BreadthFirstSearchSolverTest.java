@@ -26,7 +26,6 @@ class BreadthFirstSearchSolverTest {
     static Stream<Arguments> generateDataForSolve() {
         byte[] initialValues = { 1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 11, 12, 9, 14, 0, 15};
         State initialState = new State(Byte.parseByte("4"), Byte.parseByte("4"), initialValues, null, MoveDirection.NO_MOVE, 0);
-
         return Stream.of(
                 Arguments.of(initialState, MoveOrder.RIGHT_DOWN_UP_LEFT),
                 Arguments.of(initialState, MoveOrder.RIGHT_DOWN_LEFT_UP),

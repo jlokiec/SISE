@@ -101,7 +101,6 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
             if(currentState.getDepthLevel() < MAXIMUM_RECURSION_DEPTH) {
                 Queue<State> neighbors = stateFactory.getNeighbors(currentState, moveStrategy);
                 for (State neighbor : neighbors) {
-                    listOfOpenStates.addLast(neighbor);
                     if(listOfClosedStates.contains(neighbor)) {
                         neighbors.remove(neighbor);
                     }
@@ -111,6 +110,7 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
                     }
                     listOfClosedStates.add(currentState);
                     visitedStates++;
+                    listOfOpenStates.addLast(neighbor);
                 }
             }
         }

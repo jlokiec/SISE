@@ -98,7 +98,6 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
             if(currentState.getDepthLevel() < MAXIMUM_RECURSION_DEPTH) {
                 Queue<State> neighbors = stateFactory.getNeighborsReversed(currentState, moveStrategy);
                 for (State neighbor : neighbors) {
-                    listOfOpenStates.push(neighbor);
                     if(listOfClosedStates.contains(neighbor)) {
                         neighbors.remove(neighbor);
                     }
@@ -108,6 +107,7 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
                     }
                     listOfClosedStates.add(currentState);
                     visitedStates++;
+                    listOfOpenStates.push(neighbor);
                 }
             }
         }

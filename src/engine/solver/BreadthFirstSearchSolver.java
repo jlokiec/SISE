@@ -59,7 +59,6 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
     protected final int MAXIMUM_RECURSION_DEPTH = 20;
 
 
-
     public BreadthFirstSearchSolver(State initialState, MoveOrder moveOrder) {
         stateFactory = new StateFactory(initialState.getSizeX(), initialState.getSizeY());
         goalState = stateFactory.getSolvedState();
@@ -90,7 +89,7 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
             currentState = listOfOpenStates.pollFirst();
             processedStates++;
 
-            if(currentState.getDepthLevel() > maxDepth)
+            if (currentState.getDepthLevel() > maxDepth)
                 maxDepth = currentState.getDepthLevel();
 
             if (isSolved(currentState)) {
@@ -98,13 +97,16 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
                 return; // Success
             }
 
-            if(currentState.getDepthLevel() < MAXIMUM_RECURSION_DEPTH) {
+            if (currentState.getDepthLevel() < MAXIMUM_RECURSION_DEPTH) {
                 Queue<State> neighbors = stateFactory.getNeighbors(currentState, moveStrategy);
                 for (State neighbor : neighbors) {
-                    if(listOfClosedStates.contains(neighbor)) {
+                    if (listOfClosedStates.contains(neighbor)) {
                         neighbors.remove(neighbor);
                     }
                     if (isSolved(neighbor)) {
+                        if (neighbor.getDepthLevel() > maxDepth)
+                            maxDepth = neighbor.getDepthLevel();
+
                         setInformation(neighbor, startTimestamp, visitedStates, processedStates);
                         return; // Success
                     }
@@ -130,6 +132,7 @@ public class BreadthFirstSearchSolver implements PuzzleSolver {
         double computationTime = (endTimestamp - startTimestamp) / 100000.0;
         extraInformation.setComputationTime(computationTime);
     }
+
     @Override
     public ExtraInformation getExtraInformation() {
         return extraInformation;

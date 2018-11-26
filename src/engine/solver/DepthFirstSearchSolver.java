@@ -9,7 +9,7 @@ import result.SolutionInformation;
 
 import java.util.*;
 
-public class DepthFirstSearchSolver implements PuzzleSolver{
+public class DepthFirstSearchSolver implements PuzzleSolver {
     private ExtraInformation extraInformation;
     private SolutionInformation solutionInformation;
 
@@ -88,20 +88,23 @@ public class DepthFirstSearchSolver implements PuzzleSolver{
             currentState = listOfOpenStates.pop();
             processedStates++;
 
-            if(currentState.getDepthLevel() > maxDepth)
+            if (currentState.getDepthLevel() > maxDepth)
                 maxDepth = currentState.getDepthLevel();
 
             if (isSolved(currentState)) {
                 setInformation(currentState, startTimestamp, visitedStates, processedStates);
                 return; // Success
             }
-            if(currentState.getDepthLevel() < MAXIMUM_RECURSION_DEPTH) {
+            if (currentState.getDepthLevel() < MAXIMUM_RECURSION_DEPTH) {
                 Queue<State> neighbors = stateFactory.getNeighborsReversed(currentState, moveStrategy);
                 for (State neighbor : neighbors) {
-                    if(listOfClosedStates.contains(neighbor)) {
+                    if (listOfClosedStates.contains(neighbor)) {
                         neighbors.remove(neighbor);
                     }
                     if (isSolved(neighbor)) {
+                        if (neighbor.getDepthLevel() > maxDepth)
+                            maxDepth = neighbor.getDepthLevel();
+
                         setInformation(neighbor, startTimestamp, visitedStates, processedStates);
                         return; // Success
                     }

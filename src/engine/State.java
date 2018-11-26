@@ -1,9 +1,8 @@
 package engine;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Queue;
 
 public class State {
     public static final byte ZERO_PUZZLE = 0;
@@ -102,5 +101,13 @@ public class State {
         }
 
         return str;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        State state = (State) o;
+        return Arrays.equals(stateArray, state.stateArray);
     }
 }

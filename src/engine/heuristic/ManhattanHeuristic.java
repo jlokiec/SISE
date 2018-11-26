@@ -10,17 +10,15 @@ public class ManhattanHeuristic implements Heuristic {
         int distance = processedState.getDepthLevel();
 
         for (int i = 0; i < stateArray.length; i++) {
-            if (stateArray[i] == State.ZERO_PUZZLE) {
-                continue;
+            if (stateArray[i] != State.ZERO_PUZZLE) {
+                byte puzzleValue = stateArray[i];
+                int x = processedState.getPuzzleX(puzzleValue);
+                int y = processedState.getPuzzleY(puzzleValue);
+                int targetX = solvedState.getPuzzleX(puzzleValue);
+                int targetY = solvedState.getPuzzleY(puzzleValue);
+
+                distance += (Math.abs(x - targetX) + Math.abs(y - targetY));
             }
-
-            byte puzzleValue = stateArray[i];
-            byte puzzleX = processedState.getPuzzleX(puzzleValue);
-            byte puzzleY = processedState.getPuzzleY(puzzleValue);
-            byte solvedX = solvedState.getPuzzleX(puzzleValue);
-            byte solvedY = solvedState.getPuzzleY(puzzleValue);
-
-            distance += Math.abs(puzzleX - solvedX) + Math.abs(puzzleY - solvedY);
         }
 
         return distance;

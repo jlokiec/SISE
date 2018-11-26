@@ -8,6 +8,7 @@ import engine.heuristic.Heuristic;
 import result.ExtraInformation;
 import result.SolutionInformation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -32,31 +33,35 @@ public class AStarPuzzleSolver implements PuzzleSolver {
         solutionInformation = new SolutionInformation();
     }
 
-    private boolean isSolved() {
+    private boolean isSolved(State currentState) {
         return Arrays.equals(currentState.getStateArray(), solvedState.getStateArray());
     }
 
     @Override
     public void solve() {
         int visitedStates = 0;
+        int processedStates = 0;
         long startTimestamp = System.nanoTime();
 
-        PriorityQueue<StateWithPriority> priorityQueue = new PriorityQueue<>();
-        priorityQueue.add(new StateWithPriority(currentState, 0));
+        PriorityQueue<StateWithPriority> frontier = new PriorityQueue<>();
+        frontier.add(new StateWithPriority(currentState, 0));
 
-        while (!priorityQueue.isEmpty()) {
-            currentState = priorityQueue.poll().getState();
+        List<State> explored = new ArrayList<>();
+        explored.add(currentState);
 
-            visitedStates++;
+        while (!frontier.isEmpty()) {
+            currentState = frontier.poll().getState();
 
-            if (isSolved()) {
+            processedStates++;
+
+            if (isSolved(currentState)) {
                 long endTimestamp = System.nanoTime();
 
                 solutionInformation.setSolutionLength(currentState.getDepthLevel());
                 solutionInformation.setSolutionMoves(currentState.getPath());
 
                 extraInformation.setVisitedStates(visitedStates);
-                extraInformation.setProcessedStates(visitedStates + priorityQueue.size());
+                extraInformation.setProcessedStates(processedStates);
                 extraInformation.setMaxRecursionDepth(currentState.getDepthLevel());
                 extraInformation.setSolutionLength(currentState.getDepthLevel());
 
@@ -64,13 +69,18 @@ public class AStarPuzzleSolver implements PuzzleSolver {
                 extraInformation.setComputationTime(computationTime);
 
                 return;
+            } else {
+                explored.add(currentState);
             }
 
-            List<MoveDirection> availableMoves = currentState.getAvailableMoves();
-
-            for (MoveDirection moveDirection : availableMoves) {
+            for (MoveDirection moveDirection : currentState.getAvailableMoves()) {
                 State stateAfterMove = stateFactory.getStateAfterMove(currentState, moveDirection);
-                priorityQueue.add(new StateWithPriority(stateAfterMove, heuristic.getValue(stateAfterMove, solvedState)));
+
+                if (!explored.contains(stateAfterMove)) {
+                    frontier.add(new StateWithPriority(stateAfterMove, heuristic.getValue(stateAfterMove, solvedState)));
+                }
+
+                visitedStates++;
             }
         }
     }

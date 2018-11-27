@@ -39,6 +39,7 @@ public class AStarPuzzleSolver implements PuzzleSolver {
 
     @Override
     public void solve() {
+        int maxDepth = 0;
         int visitedStates = 0;
         int processedStates = 0;
         long startTimestamp = System.nanoTime();
@@ -52,6 +53,10 @@ public class AStarPuzzleSolver implements PuzzleSolver {
         while (!frontier.isEmpty()) {
             currentState = frontier.poll().getState();
 
+            if (currentState.getDepthLevel() > maxDepth) {
+                maxDepth = currentState.getDepthLevel();
+            }
+
             processedStates++;
 
             if (isSolved(currentState)) {
@@ -62,7 +67,7 @@ public class AStarPuzzleSolver implements PuzzleSolver {
 
                 extraInformation.setVisitedStates(visitedStates);
                 extraInformation.setProcessedStates(processedStates);
-                extraInformation.setMaxRecursionDepth(currentState.getDepthLevel());
+                extraInformation.setMaxRecursionDepth(maxDepth);
                 extraInformation.setSolutionLength(currentState.getDepthLevel());
 
                 double computationTime = (endTimestamp - startTimestamp) / 100000.0;
@@ -75,6 +80,27 @@ public class AStarPuzzleSolver implements PuzzleSolver {
 
             for (MoveDirection moveDirection : currentState.getAvailableMoves()) {
                 State stateAfterMove = stateFactory.getStateAfterMove(currentState, moveDirection);
+
+                if (isSolved(stateAfterMove)) {
+                    if (stateAfterMove.getDepthLevel() > maxDepth) {
+                        maxDepth = stateAfterMove.getDepthLevel();
+                    }
+
+                    long endTimestamp = System.nanoTime();
+
+                    solutionInformation.setSolutionLength(stateAfterMove.getDepthLevel());
+                    solutionInformation.setSolutionMoves(stateAfterMove.getPath());
+
+                    extraInformation.setVisitedStates(visitedStates);
+                    extraInformation.setProcessedStates(processedStates);
+                    extraInformation.setMaxRecursionDepth(maxDepth);
+                    extraInformation.setSolutionLength(stateAfterMove.getDepthLevel());
+
+                    double computationTime = (endTimestamp - startTimestamp) / 100000.0;
+                    extraInformation.setComputationTime(computationTime);
+
+                    return;
+                }
 
                 if (!explored.contains(stateAfterMove)) {
                     frontier.add(new StateWithPriority(stateAfterMove, heuristic.getValue(stateAfterMove, solvedState)));

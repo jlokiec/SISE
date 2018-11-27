@@ -66,7 +66,7 @@ public class State {
     }
 
     public byte getPuzzleY(byte puzzleValue) {
-        return (byte) ((getPuzzleIndex(puzzleValue) - getPuzzleX(puzzleValue)) / sizeX);
+        return (byte) (getPuzzleIndex(puzzleValue) / sizeY);
     }
 
     public List<MoveDirection> getAvailableMoves() {

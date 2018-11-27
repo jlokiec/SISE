@@ -6,18 +6,21 @@ public class ManhattanHeuristic implements Heuristic {
     @Override
     public int getValue(State processedState, State solvedState) {
         byte[] stateArray = processedState.getStateArray();
+        byte sizeX = processedState.getSizeX();
+        byte sizeY = processedState.getSizeY();
 
         int distance = processedState.getDepthLevel();
 
-        for (int i = 0; i < stateArray.length; i++) {
-            if (stateArray[i] != State.ZERO_PUZZLE) {
-                byte puzzleValue = stateArray[i];
-                int x = processedState.getPuzzleX(puzzleValue);
-                int y = processedState.getPuzzleY(puzzleValue);
-                int targetX = solvedState.getPuzzleX(puzzleValue);
-                int targetY = solvedState.getPuzzleY(puzzleValue);
+        for (int height = 0; height < sizeY; height++) {
+            for (int width = 0; width < sizeX; width++) {
+                byte puzzleValue = stateArray[width + height * sizeX];
 
-                distance += (Math.abs(x - targetX) + Math.abs(y - targetY));
+                if (puzzleValue != State.ZERO_PUZZLE) {
+                    int x = (puzzleValue - 1) % sizeX;
+                    int y = (puzzleValue - 1) / sizeY;
+
+                    distance += Math.abs(width - x) + Math.abs(height - y);
+                }
             }
         }
 

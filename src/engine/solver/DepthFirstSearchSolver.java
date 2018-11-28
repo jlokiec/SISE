@@ -63,7 +63,7 @@ public class DepthFirstSearchSolver implements PuzzleSolver {
         goalState = stateFactory.getSolvedState();
         currentState = initialState;
         listOfOpenStates = new Stack<>();
-        listOfClosedStates = new LinkedHashSet<>();
+        listOfClosedStates = new HashSet<>();
         directions = new LinkedList<>();
         moveStrategy = moveOrder;
         maxDepth = 1;
@@ -77,7 +77,7 @@ public class DepthFirstSearchSolver implements PuzzleSolver {
     }
 
     @Override
-    public void solve() {
+    public boolean solve() {
         int visitedStates = 0;
         int processedStates = 0;
         long startTimestamp = System.nanoTime();
@@ -93,20 +93,20 @@ public class DepthFirstSearchSolver implements PuzzleSolver {
 
             if (isSolved(currentState)) {
                 setInformation(currentState, startTimestamp, visitedStates, processedStates);
-                return; // Success
+                return true; // Success
             }
             if (currentState.getDepthLevel() < MAXIMUM_RECURSION_DEPTH) {
                 Queue<State> neighbors = stateFactory.getNeighborsReversed(currentState, moveStrategy);
                 for (State neighbor : neighbors) {
                     if (listOfClosedStates.contains(neighbor)) {
-                        neighbors.remove(neighbor);
+                        continue;
                     }
                     if (isSolved(neighbor)) {
                         if (neighbor.getDepthLevel() > maxDepth)
                             maxDepth = neighbor.getDepthLevel();
 
                         setInformation(neighbor, startTimestamp, visitedStates, processedStates);
-                        return; // Success
+                        return true; // Success
                     }
                     listOfClosedStates.add(currentState);
                     visitedStates++;
@@ -114,6 +114,22 @@ public class DepthFirstSearchSolver implements PuzzleSolver {
                 }
             }
         }
+
+        // set information for failure
+        long endTimestamp = System.nanoTime();
+
+        solutionInformation.setSolutionLength(-1);
+        solutionInformation.setSolutionMoves("");
+
+        extraInformation.setVisitedStates(visitedStates);
+        extraInformation.setProcessedStates(processedStates);
+        extraInformation.setMaxRecursionDepth(maxDepth);
+        extraInformation.setSolutionLength(0);
+
+        double computationTime = (endTimestamp - startTimestamp) / 100000.0;
+        extraInformation.setComputationTime(computationTime);
+
+        return false;
     }
 
     private void setInformation(State state, long startTimestamp, int visitedStates, int processedStates) {

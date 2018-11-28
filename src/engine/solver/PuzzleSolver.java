@@ -4,7 +4,7 @@ import result.ExtraInformation;
 import result.SolutionInformation;
 
 public interface PuzzleSolver {
-    void solve();
+    boolean solve();
 
     ExtraInformation getExtraInformation();
 

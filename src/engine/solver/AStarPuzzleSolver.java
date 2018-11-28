@@ -8,10 +8,10 @@ import engine.heuristic.Heuristic;
 import result.ExtraInformation;
 import result.SolutionInformation;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 public class AStarPuzzleSolver implements PuzzleSolver {
     private ExtraInformation extraInformation;
@@ -38,7 +38,7 @@ public class AStarPuzzleSolver implements PuzzleSolver {
     }
 
     @Override
-    public void solve() {
+    public boolean solve() {
         int maxDepth = 0;
         int visitedStates = 0;
         int processedStates = 0;
@@ -47,8 +47,7 @@ public class AStarPuzzleSolver implements PuzzleSolver {
         PriorityQueue<StateWithPriority> frontier = new PriorityQueue<>();
         frontier.add(new StateWithPriority(currentState, 0));
 
-        List<State> explored = new ArrayList<>();
-        explored.add(currentState);
+        Set<State> explored = new HashSet<>();
 
         while (!frontier.isEmpty()) {
             currentState = frontier.poll().getState();
@@ -73,7 +72,7 @@ public class AStarPuzzleSolver implements PuzzleSolver {
                 double computationTime = (endTimestamp - startTimestamp) / 100000.0;
                 extraInformation.setComputationTime(computationTime);
 
-                return;
+                return true;
             } else {
                 explored.add(currentState);
             }
@@ -99,7 +98,7 @@ public class AStarPuzzleSolver implements PuzzleSolver {
                     double computationTime = (endTimestamp - startTimestamp) / 100000.0;
                     extraInformation.setComputationTime(computationTime);
 
-                    return;
+                    return true;
                 }
 
                 if (!explored.contains(stateAfterMove)) {
@@ -109,6 +108,22 @@ public class AStarPuzzleSolver implements PuzzleSolver {
                 visitedStates++;
             }
         }
+
+        // set information for failure
+        long endTimestamp = System.nanoTime();
+
+        solutionInformation.setSolutionLength(-1);
+        solutionInformation.setSolutionMoves("");
+
+        extraInformation.setVisitedStates(visitedStates);
+        extraInformation.setProcessedStates(processedStates);
+        extraInformation.setMaxRecursionDepth(maxDepth);
+        extraInformation.setSolutionLength(0);
+
+        double computationTime = (endTimestamp - startTimestamp) / 100000.0;
+        extraInformation.setComputationTime(computationTime);
+
+        return false;
     }
 
     @Override

@@ -80,12 +80,14 @@ public class ConsoleProgram {
                 return;
             }
 
-            puzzleSolver.solve();
+            if (puzzleSolver.solve()) {
+                System.out.println("solved");
+            } else {
+                System.out.println("failed");
+            }
 
             saveSolutionInformation(outputSolutionFile, puzzleSolver.getSolutionInformation());
             saveExtraInformation(outputExtraFile, puzzleSolver.getExtraInformation());
-
-            System.out.println("solved");
         } else {
             System.out.println("Passed incorrect number of arguments");
         }

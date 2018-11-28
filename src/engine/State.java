@@ -107,7 +107,14 @@ public class State {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         State state = (State) o;
+
         return Arrays.equals(stateArray, state.stateArray);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(stateArray);
     }
 }

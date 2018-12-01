@@ -8,10 +8,7 @@ import engine.heuristic.Heuristic;
 import result.ExtraInformation;
 import result.SolutionInformation;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 
 public class AStarPuzzleSolver implements PuzzleSolver {
     private ExtraInformation extraInformation;
@@ -44,7 +41,7 @@ public class AStarPuzzleSolver implements PuzzleSolver {
         int processedStates = 0;
         long startTimestamp = System.nanoTime();
 
-        PriorityQueue<StateWithPriority> frontier = new PriorityQueue<>();
+        Queue<StateWithPriority> frontier = new PriorityQueue<>();
         frontier.add(new StateWithPriority(currentState, 0));
 
         Set<State> explored = new HashSet<>();
